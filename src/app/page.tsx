@@ -27,22 +27,12 @@ export default function WebSocketComponent() {
     setMessages((prevMessages) => [...prevMessages, data]); // Use functional update
   };
 
-  // Function to remove an item by index
-  // const removeItem = (index: number) => {
-  //   const newItems = messages.filter((_, i) => i !== index);
-  //   setMessages(newItems);
-  // };
-
   // Send the user data to the WebSocket server
   const handleSend = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socket) socket.send(user);
     addMessage({ author: "Me", content: user });
     setUser("");
-    const current = messagesContainer.current;
-    if (current) {
-      current.scrollIntoView({ block: "end", behavior: "smooth" });
-    }
   };
 
   // Handle input field changes
@@ -50,13 +40,19 @@ export default function WebSocketComponent() {
     setUser(event.target.value);
   };
 
+  const scroll = () => {
+    const current = messagesContainer.current;
+    if (current) {
+      current.scrollIntoView({ block: "end", behavior: "smooth" });
+    }
+  };
+
   // Initialize WebSocket on component mount
-  useEffect(() => {
+  const start = () => {
     const ws = new WebSocket(SERVER_URL);
     setSocket(ws); // Store the WebSocket instance
     ws.onmessage = (event) => {
       const data: Data = JSON.parse(event.data);
-      console.log(data);
       if (data.author === "server") setId(data.content);
       else {
         addMessage(data);
@@ -73,41 +69,42 @@ export default function WebSocketComponent() {
         ws.close(); // Close connection on cleanup
       }
     };
-  }, []); // Empty dependency array ensures this effect runs only once (on mount)
+  };
+
+  useEffect(scroll, [messages]);
+
+  useEffect(start, []); // Empty dependency array ensures this effect runs only once (on mount)
 
   return (
     <div className="w-full flex flex-col bg-base-200 p-4">
-      <h1 className="text-xl font-bold">Server Message:</h1>
-      <div className="h-96 overflow-y-auto overflow-x-hidden">
+      <h1 className="text-xl font-bold text-center">{`LocalChat - ${IP}`}</h1>
+      <div className="h-[50vh] min-h-96 overflow-y-auto overflow-x-hidden">
         <ul ref={messagesContainer} className="list-disc">
           {messages.map((value, index) => (
             <li key={index} className="flex justify-between items-center mb-2">
               {`${value.author}: ${value.content}`}
-              {/* <button
-                className="btn btn-sm btn-error btn-outline"
-                onClick={() => removeItem(index)}
-              >
-                Delete
-              </button> */}
             </li>
           ))}
         </ul>
       </div>
-      <div className="me-auto">
-        <span>{`Your Id: ${id}`}</span>
+      <div className="flex items-baseline">
+        <div>
+          <span>{`Your Id: ${id}`}</span>
+        </div>
+        <form className="join mx-auto w-full max-w-lg" onSubmit={handleSend}>
+          <input
+            type="text"
+            onChange={handleTextChange}
+            placeholder="Enter a message"
+            value={user}
+            className="input w-full join-item"
+            required
+          />
+          <button className="btn btn-primary join-item" type="submit">
+            Send
+          </button>
+        </form>
       </div>
-      <form className="join mx-auto w-full max-w-sm" onSubmit={handleSend}>
-        <input
-          type="text"
-          onChange={handleTextChange}
-          placeholder="Enter a message"
-          value={user}
-          className="input w-full join-item"
-        />
-        <button className="btn btn-primary join-item" type="submit">
-          Send
-        </button>
-      </form>
     </div>
   );
 }
