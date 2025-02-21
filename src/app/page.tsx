@@ -2,18 +2,29 @@
 
 import { FormEvent, useEffect, useState, useRef } from "react";
 
+type Data = {
+  content: string;
+  author: "server" | string;
+};
+
 const IP = process.env.NEXT_PUBLIC_IP!;
 const SERVER_URL = `ws://${IP}:5000`;
 
 export default function WebSocketComponent() {
   const [user, setUser] = useState<string>("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<
+    {
+      content: string;
+      author: string;
+    }[]
+  >([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [id, setId] = useState<string>("");
   const messagesContainer = useRef<HTMLUListElement | null>(null);
 
   // Function to add an item to the array
-  const addMessage = (item: string) => {
-    setMessages((prevMessages) => [...prevMessages, item]); // Use functional update
+  const addMessage = (data: Data) => {
+    setMessages((prevMessages) => [...prevMessages, data]); // Use functional update
   };
 
   // Function to remove an item by index
@@ -26,7 +37,7 @@ export default function WebSocketComponent() {
   const handleSend = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (socket) socket.send(user);
-    addMessage(user);
+    addMessage({ author: "Me", content: user });
     setUser("");
     const current = messagesContainer.current;
     if (current) {
@@ -44,7 +55,12 @@ export default function WebSocketComponent() {
     const ws = new WebSocket(SERVER_URL);
     setSocket(ws); // Store the WebSocket instance
     ws.onmessage = (event) => {
-      addMessage(event.data);
+      const data: Data = JSON.parse(event.data);
+      console.log(data);
+      if (data.author === "server") addMessage(data);
+      else {
+        setId(data.content);
+      }
     };
 
     ws.onclose = () => {
@@ -66,7 +82,7 @@ export default function WebSocketComponent() {
         <ul ref={messagesContainer} className="list-disc">
           {messages.map((value, index) => (
             <li key={index} className="flex justify-between items-center mb-2">
-              {value}
+              {`${value.author}: ${value.content}`}
               {/* <button
                 className="btn btn-sm btn-error btn-outline"
                 onClick={() => removeItem(index)}
@@ -77,10 +93,14 @@ export default function WebSocketComponent() {
           ))}
         </ul>
       </div>
+      <div className="me-auto">
+        <span>{`Your Id: ${id}`}</span>
+      </div>
       <form className="join mx-auto w-full max-w-sm" onSubmit={handleSend}>
         <input
           type="text"
           onChange={handleTextChange}
+          placeholder="Enter a message"
           value={user}
           className="input w-full join-item"
         />
