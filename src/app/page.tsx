@@ -2,7 +2,8 @@
 
 import { FormEvent, useEffect, useState, useRef } from "react";
 
-const SERVER_URL = process.env.NEXT_PUBLIC_IP!;
+const IP = process.env.NEXT_PUBLIC_IP!;
+const SERVER_URL = `ws://${IP}:5000`;
 
 export default function WebSocketComponent() {
   const [user, setUser] = useState<string>("");
