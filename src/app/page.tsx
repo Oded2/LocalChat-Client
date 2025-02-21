@@ -8,7 +8,6 @@ export default function WebSocketComponent() {
   const [user, setUser] = useState<string>("");
   const [messages, setMessages] = useState<string[]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [progress, setProgress] = useState(false);
   const messagesContainer = useRef<HTMLUListElement | null>(null);
 
   // Function to add an item to the array
@@ -17,16 +16,16 @@ export default function WebSocketComponent() {
   };
 
   // Function to remove an item by index
-  const removeItem = (index: number) => {
-    const newItems = messages.filter((_, i) => i !== index);
-    setMessages(newItems);
-  };
+  // const removeItem = (index: number) => {
+  //   const newItems = messages.filter((_, i) => i !== index);
+  //   setMessages(newItems);
+  // };
 
   // Send the user data to the WebSocket server
   const handleSend = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setProgress(true);
     if (socket) socket.send(user);
+    addMessage(user);
     setUser("");
     const current = messagesContainer.current;
     if (current) {
@@ -45,7 +44,7 @@ export default function WebSocketComponent() {
     setSocket(ws); // Store the WebSocket instance
     ws.onmessage = (event) => {
       addMessage(event.data);
-      setProgress(false);
+      console.log("here");
     };
 
     ws.onclose = () => {
@@ -85,11 +84,7 @@ export default function WebSocketComponent() {
           value={user}
           className="input w-full join-item"
         />
-        <button
-          className="btn btn-primary join-item"
-          type="submit"
-          disabled={progress}
-        >
+        <button className="btn btn-primary join-item" type="submit">
           Send
         </button>
       </form>
