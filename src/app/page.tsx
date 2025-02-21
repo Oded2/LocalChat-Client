@@ -76,9 +76,11 @@ export default function WebSocketComponent() {
   useEffect(start, []); // Empty dependency array ensures this effect runs only once (on mount)
 
   return (
-    <div className="w-full flex flex-col bg-base-200 p-4">
-      <h1 className="text-xl font-bold text-center">{`LocalChat - ${IP}`}</h1>
-      <div className="h-[50vh] min-h-96 overflow-y-auto overflow-x-hidden">
+    <div className="w-full flex flex-col justify-between bg-base-200 p-4 h-screen">
+      <div>
+        <h1 className="text-xl font-bold text-center">{`LocalChat - ${IP}`}</h1>
+      </div>
+      <div className="overflow-y-auto overflow-x-hidden mb-auto">
         <ul ref={messagesContainer} className="list-disc">
           {messages.map((value, index) => (
             <li key={index} className="flex justify-between items-center mb-2">
