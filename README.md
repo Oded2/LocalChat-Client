@@ -24,7 +24,7 @@ Make sure you have the following installed:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/localchat-client.git
+   git clone https://github.com/oded2/localchat-client.git
    cd localchat-client
    ```
 
