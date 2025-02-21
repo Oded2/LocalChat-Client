@@ -99,7 +99,7 @@ export default function WebSocketComponent() {
           }`}
         </h1>
         <button className="link text-sm" onClick={() => setShowIp(!showIp)}>
-          {showIp ? "Hide IP" : "Show IP"}
+          {showIp ? "Hide Server IP" : "Show Server IP"}
         </button>
       </div>
       <div className="overflow-y-auto overflow-x-hidden mb-auto">
