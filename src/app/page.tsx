@@ -4,13 +4,23 @@ import { FormEvent, useEffect, useState, useRef } from "react";
 
 type Data = {
   content: string;
-  author: "server" | string;
+  author: string;
 };
 
-const IP = process.env.NEXT_PUBLIC_IP!;
-const SERVER_URL = `ws://${IP}:5000`;
+const IP = process.env.NEXT_PUBLIC_IP;
 
 export default function WebSocketComponent() {
+  if (!IP)
+    return (
+      <div className="flex flex-col gap-2 bg-base-100 p-5 text-center">
+        <span className="text-error font-bold">Error: No IP configured</span>
+        <span>
+          Create a .env file if you haven&apos;t already and set
+          &quot;NEXT_PUBLIC_IP&quot; as the server&apos;s IP address.
+        </span>
+      </div>
+    );
+  const SERVER_URL = `ws://${IP}:5000`;
   const [user, setUser] = useState<string>("");
   const [messages, setMessages] = useState<
     {
@@ -20,6 +30,7 @@ export default function WebSocketComponent() {
   >([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [id, setId] = useState<string>("");
+  const [showIp, setShowIp] = useState<boolean>(IP === "localhost");
   const messagesContainer = useRef<HTMLUListElement | null>(null);
 
   // Function to add an item to the array
@@ -76,9 +87,20 @@ export default function WebSocketComponent() {
   useEffect(start, []); // Empty dependency array ensures this effect runs only once (on mount)
 
   return (
-    <div className="w-full flex flex-col justify-between bg-base-200 p-4 h-screen">
-      <div>
-        <h1 className="text-xl font-bold text-center">{`LocalChat - ${IP}`}</h1>
+    <div className="w-full flex flex-col gap-2 justify-between bg-base-200 p-4 h-screen">
+      <div className="flex mx-auto flex-col">
+        <h1 className="text-xl font-bold text-center">
+          {`LocalChat - ${
+            showIp
+              ? IP
+              : IP.split(".")
+                  .map((part) => part.replace(/./g, "x"))
+                  .join(".")
+          }`}
+        </h1>
+        <button className="link text-sm" onClick={() => setShowIp(!showIp)}>
+          {showIp ? "Hide IP" : "Show IP"}
+        </button>
       </div>
       <div className="overflow-y-auto overflow-x-hidden mb-auto">
         <ul ref={messagesContainer} className="list-disc">
