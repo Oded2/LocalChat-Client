@@ -31,6 +31,7 @@ export default function WebSocketComponent() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [id, setId] = useState<string>("");
   const [showIp, setShowIp] = useState<boolean>(IP === "localhost");
+  const [disconnected, setDisconnected] = useState<boolean>(false);
   const messagesContainer = useRef<HTMLUListElement | null>(null);
 
   // Function to add an item to the array
@@ -63,12 +64,13 @@ export default function WebSocketComponent() {
   };
 
   const handlePurge = () => {
+    if (!confirm("Are you sure you want to do this?")) return;
     const data: Data = {
       content: "",
       author: "request-purge",
     };
     sendToServer(data);
-    messages.length = 0;
+    setMessages([]);
   };
 
   const sendToServer = (data: Data) => {
@@ -77,6 +79,7 @@ export default function WebSocketComponent() {
 
   // Initialize WebSocket on component mount
   const start = () => {
+    setDisconnected(false);
     const ws = new WebSocket(SERVER_URL);
     setSocket(ws); // Store the WebSocket instance
     ws.onmessage = (event) => {
@@ -89,6 +92,7 @@ export default function WebSocketComponent() {
 
     ws.onclose = () => {
       console.log("Disconnected from server");
+      setDisconnected(true);
     };
 
     // Cleanup function to close WebSocket connection when the component unmounts
@@ -146,9 +150,11 @@ export default function WebSocketComponent() {
           </button>
         </form>
         <div className="flex gap-2">
-          <button onClick={start} className="btn btn-neutral">
-            Reconnect
-          </button>
+          {disconnected && (
+            <button onClick={start} className="btn btn-primary">
+              Reconnect
+            </button>
+          )}
           <button onClick={handlePurge} className="btn btn-error btn-outline">
             Purge Server
           </button>
