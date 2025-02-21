@@ -57,9 +57,9 @@ export default function WebSocketComponent() {
     ws.onmessage = (event) => {
       const data: Data = JSON.parse(event.data);
       console.log(data);
-      if (data.author === "server") addMessage(data);
+      if (data.author === "server") setId(data.content);
       else {
-        setId(data.content);
+        addMessage(data);
       }
     };
 
