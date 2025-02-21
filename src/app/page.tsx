@@ -44,7 +44,6 @@ export default function WebSocketComponent() {
     setSocket(ws); // Store the WebSocket instance
     ws.onmessage = (event) => {
       addMessage(event.data);
-      console.log("here");
     };
 
     ws.onclose = () => {
