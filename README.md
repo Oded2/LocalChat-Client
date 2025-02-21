@@ -24,7 +24,7 @@ Make sure you have the following installed:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/oded2/localchat-client.git
+   git clone https://github.com/Oded2/localchat-client.git
    cd localchat-client
    ```
 
@@ -78,7 +78,7 @@ NEXT_PUBLIC_IP=localhost
 
 ## Server-Side Repository
 
-The LocalChat server-side repository handles WebSocket connections and message broadcasting. You can find it [here](https://github.com/oded2/localchat-server)
+The LocalChat server-side repository handles WebSocket connections and message broadcasting. You can find it [here](https://github.com/Oded2/localchat-server)
 
 ## License
 
