@@ -41,7 +41,11 @@ export default function WebSocketComponent() {
   // Send the user data to the WebSocket server
   const handleSend = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (socket) socket.send(user);
+    const data: Data = {
+      content: user,
+      author: id,
+    };
+    sendToServer(data);
     addMessage({ author: "Me", content: user });
     setUser("");
   };
@@ -56,6 +60,19 @@ export default function WebSocketComponent() {
     if (current) {
       current.scrollIntoView({ block: "end", behavior: "smooth" });
     }
+  };
+
+  const handlePurge = () => {
+    const data: Data = {
+      content: "",
+      author: "request-purge",
+    };
+    sendToServer(data);
+    messages.length = 0;
+  };
+
+  const sendToServer = (data: Data) => {
+    if (socket) socket.send(JSON.stringify(data));
   };
 
   // Initialize WebSocket on component mount
@@ -128,6 +145,14 @@ export default function WebSocketComponent() {
             Send
           </button>
         </form>
+        <div className="flex gap-2">
+          <button onClick={start} className="btn btn-neutral">
+            Reconnect
+          </button>
+          <button onClick={handlePurge} className="btn btn-error btn-outline">
+            Purge Server
+          </button>
+        </div>
       </div>
     </div>
   );
