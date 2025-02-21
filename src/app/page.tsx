@@ -31,7 +31,7 @@ export default function WebSocketComponent() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [id, setId] = useState<string>("");
   const [showIp, setShowIp] = useState<boolean>(IP === "localhost");
-  const [disconnected, setDisconnected] = useState<boolean>(false);
+  const [disconnected, setDisconnected] = useState<boolean>(true);
   const messagesContainer = useRef<HTMLUListElement | null>(null);
 
   // Function to add an item to the array
@@ -79,13 +79,14 @@ export default function WebSocketComponent() {
 
   // Initialize WebSocket on component mount
   const start = () => {
-    setDisconnected(false);
     const ws = new WebSocket(SERVER_URL);
     setSocket(ws); // Store the WebSocket instance
     ws.onmessage = (event) => {
       const data: Data = JSON.parse(event.data);
-      if (data.author === "server") setId(data.content);
-      else {
+      if (data.author === "server-clientid") {
+        setDisconnected(false);
+        setId(data.content);
+      } else {
         addMessage(data);
       }
     };
