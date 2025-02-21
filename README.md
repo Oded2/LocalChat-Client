@@ -78,7 +78,7 @@ NEXT_PUBLIC_IP=localhost
 
 ## Server-Side Repository
 
-The LocalChat server-side repository handles WebSocket connections and message broadcasting. You can find it [here](https://github.com/Oded2/LocalChat-Server)
+The LocalChat server-side repository handles WebSocket connections and message broadcasting. You can find it [here](https://github.com/Oded2/LocalChat-Server).
 
 ## License
 
