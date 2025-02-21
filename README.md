@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LocalChat
 
-## Getting Started
+LocalChat is a lightweight, real-time chat application that consists of two repositories: a **client-side** application built with **Next.js**, **DaisyUI**, and **TailwindCSS**, and a **server-side** WebSocket server.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Real-time chat functionality using WebSockets
+- Clean and modern UI with TailwindCSS and DaisyUI
+- Ability to purge messages from the server
+- Option to show/hide the server IP address
+- Reconnect functionality if disconnected from the server
+
+## Client-Side Setup
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/)
+- [Yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
+
+### Installation
+
+1. Clone the repository:
+
+   ```sh
+   git clone https://github.com/yourusername/localchat-client.git
+   cd localchat-client
+   ```
+
+2. Install dependencies:
+
+   ```sh
+   npm install
+   # or
+   yarn install
+   ```
+
+3. Create a `.env` file in the root directory and set the WebSocket server IP:
+
+   ```sh
+   NEXT_PUBLIC_IP=your-server-ip
+   ```
+
+4. Start the development server:
+   ```sh
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+## Client-Side Configuration
+
+The following environment variable must be set in the `.env` file:
+
+- `NEXT_PUBLIC_IP`: The WebSocket server's IP address.
+
+If you are running the server locally, set it as:
+
+```sh
+NEXT_PUBLIC_IP=localhost
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Client-Side Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Open the application in your browser.
+2. Enter a message and click **Send** to broadcast it.
+3. Click **Purge Server** to clear all messages.
+4. Click **Reconnect** if disconnected from the server.
+5. Toggle **Show Server IP** to reveal/hide the server's IP address.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technologies Used
 
-## Learn More
+- **Next.js** - React framework for SSR and static site generation
+- **TailwindCSS** - Utility-first CSS framework
+- **DaisyUI** - UI components for TailwindCSS
+- **WebSockets** - Real-time communication
 
-To learn more about Next.js, take a look at the following resources:
+## Server-Side Repository
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The LocalChat server-side repository handles WebSocket connections and message broadcasting. You can find it [here](https://github.com/oded2/localchat-server)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
+This project is licensed under the MIT License.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Feel free to contribute or report issues via GitHub!
