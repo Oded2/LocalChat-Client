@@ -42,6 +42,10 @@ export default function WebSocketComponent() {
   // Send the user data to the WebSocket server
   const handleSend = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (disconnected) {
+      alert("You are not connected to the server.");
+      return;
+    }
     const data: Data = {
       content: user,
       author: id,
@@ -156,7 +160,11 @@ export default function WebSocketComponent() {
               Reconnect
             </button>
           )}
-          <button onClick={handlePurge} className="btn btn-error btn-outline">
+          <button
+            onClick={handlePurge}
+            disabled={disconnected}
+            className="btn btn-error btn-outline"
+          >
             Purge Server
           </button>
         </div>
