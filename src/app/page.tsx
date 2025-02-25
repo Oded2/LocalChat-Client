@@ -7,27 +7,12 @@ type Data = {
   author: string;
 };
 
-const IP = process.env.NEXT_PUBLIC_IP;
+const IP = process.env.NEXT_PUBLIC_IP ?? "";
+const SERVER_URL = `ws://${IP}:5000`;
 
 export default function WebSocketComponent() {
-  if (!IP)
-    return (
-      <div className="flex flex-col gap-2 bg-base-100 p-5 text-center">
-        <span className="text-error font-bold">Error: No IP configured</span>
-        <span>
-          Create a .env file if you haven&apos;t already and set
-          &quot;NEXT_PUBLIC_IP&quot; as the server&apos;s IP address.
-        </span>
-      </div>
-    );
-  const SERVER_URL = `ws://${IP}:5000`;
   const [user, setUser] = useState<string>("");
-  const [messages, setMessages] = useState<
-    {
-      content: string;
-      author: string;
-    }[]
-  >([]);
+  const [messages, setMessages] = useState<Data[]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [id, setId] = useState<string>("");
   const [showIp, setShowIp] = useState<boolean>(IP === "localhost");
@@ -109,9 +94,17 @@ export default function WebSocketComponent() {
   };
 
   useEffect(scroll, [messages]);
-
   useEffect(start, []); // Empty dependency array ensures this effect runs only once (on mount)
-
+  if (IP.length == 0)
+    return (
+      <div className="flex flex-col gap-2 bg-base-100 p-5 text-center">
+        <span className="text-error font-bold">Error: No IP configured</span>
+        <span>
+          Create a .env file if you haven&apos;t already and set
+          &quot;NEXT_PUBLIC_IP&quot; as the server&apos;s IP address.
+        </span>
+      </div>
+    );
   return (
     <div className="w-full flex flex-col gap-2 justify-between bg-base-200 p-4 h-screen">
       <div className="flex mx-auto flex-col">
